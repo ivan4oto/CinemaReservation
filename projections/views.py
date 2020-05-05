@@ -11,6 +11,7 @@ class ProjectionViews:
         projection_date = input('Date: ')
         projection_time = input('Time: ')
         movie_id = int(input('Movie Id: '))
+
         if self.controller.create_projection(movie_type=movie_type, projection_date=projection_date,
                                              projection_time=projection_time, movie_id=movie_id):
             print("Movie was successfully created")
@@ -22,6 +23,7 @@ class ProjectionViews:
 
     def get_all(self):
         projections = self.controller.get_all()
+
         for p in projections:
             print(p)
 

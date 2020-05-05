@@ -8,6 +8,8 @@ CREATE_PROJECTION_TABLE = '''
         CONSTRAINT fk_movie foreign key (movie_id) REFERENCES movies(id));
 '''
 
+
+
 CREATE_PROJECTION = f'''
         INSERT INTO projections (movie_type, projection_date, projection_time, movie_id)
              VALUES ( ? , ? , ? ,?);
