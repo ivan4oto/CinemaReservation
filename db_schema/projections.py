@@ -17,6 +17,19 @@ CREATE_PROJECTION = f'''
 GET_BY_ID = f'''
         SELECT id,movie_type, projection_date, projection_time, movie_id from projections WHERE id = ?;
 '''
+
+GET_PROJECTIONS_FOR_MOVIE_BY_DATE = f'''
+        SELECT id,movie_type, projection_date, projection_time, movie_id from projections
+            WHERE movie_id = ? AND projection_date = ?
+            ORDER BY projection_date DESC;
+'''
+
+GET_PROJECTIONS_FOR_MOVIE_WITHOUT_DATE = f'''
+        SELECT id,movie_type, projection_date, projection_time, movie_id from projections
+            WHERE movie_id = ?
+            ORDER BY projection_date DESC;
+'''
+
 GET_ALL = f'''
         SELECT id,movie_type, projection_date, projection_time, movie_id  from projections;
 '''
