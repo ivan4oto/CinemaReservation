@@ -1,4 +1,5 @@
 from users.views import UserViews
+from movies.views import MovieViews
 
 
 def welcome():
@@ -13,3 +14,8 @@ def welcome():
         return user_views.signup()
 
     raise ValueError(f'Unknown command {command}.')
+
+def get_number_of_seats():
+    seats = int(input('How many seats you wish to reserve: '))
+    movie_views = MovieViews()
+    movie_views.get_all_movies()
