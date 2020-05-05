@@ -1,6 +1,7 @@
 from projections.projections_getaway import ProjectionGetaway
 
 
+
 class ProjectionController:
     def __init__(self):
         self.projection_gateway = ProjectionGetaway()

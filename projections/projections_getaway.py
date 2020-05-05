@@ -29,6 +29,7 @@ class ProjectionGetaway:
 
         projection_db = self.db.cursor.fetchall()
         result = []
+
         for db_projection in projection_db:
             projection = self.model.convert(db_projection)
             result.append(projection)
