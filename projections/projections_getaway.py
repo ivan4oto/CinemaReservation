@@ -1,5 +1,6 @@
 from db import Database
-from db_schema.projections import CREATE_PROJECTION, GET_BY_ID, GET_ALL, DELETE_PROJECTION, UPDATE_DATE, UPDATE_TIME
+from db_schema.projections import CREATE_PROJECTION, GET_BY_ID, GET_ALL, DELETE_PROJECTION, UPDATE_DATE, UPDATE_TIME, \
+    GET_PROJECTIONS_FOR_MOVIE_BY_DATE, GET_PROJECTIONS_FOR_MOVIE_WITHOUT_DATE
 from projections.models import ProjectionModel
 
 
@@ -30,6 +31,37 @@ class ProjectionGetaway:
         projection_db = self.db.cursor.fetchall()
         result = []
 
+        for db_projection in projection_db:
+            projection = self.model.convert(db_projection)
+            result.append(projection)
+
+        self.db.connection.commit()
+        self.db.connection.close()
+
+        return result
+
+    def get_projections_for_movie_by_date(self, *, movie_id, date):
+
+        self.db.cursor.execute(GET_PROJECTIONS_FOR_MOVIE_BY_DATE, (movie_id, date))
+
+        projection_db = self.db.cursor.fetchall()
+        result = []
+
+        for db_projection in projection_db:
+            projection = self.model.convert(db_projection)
+            result.append(projection)
+
+        self.db.connection.commit()
+        self.db.connection.close()
+
+        return result
+
+    def get_projections_for_movie_without_date(self, *, movie_id):
+
+        self.db.cursor.execute(GET_PROJECTIONS_FOR_MOVIE_WITHOUT_DATE, (movie_id))
+
+        projection_db = self.db.cursor.fetchall()
+        result = []
         for db_projection in projection_db:
             projection = self.model.convert(db_projection)
             result.append(projection)

@@ -15,6 +15,14 @@ class ProjectionController:
         movie = self.projection_gateway.get_by_id(projection_id=projection_id)
         return movie
 
+    def get_projections_for_movie(self, movie_id, date=""):
+        if date == "":
+            self.projection_gateway.get_projections_for_movie_without_date(movie_id=movie_id)
+            return True
+        else:
+            self.projection_gateway.get_projections_for_movie_by_date(movie_id=movie_id, date=date)
+            return True
+
     def get_all(self):
         movies = self.projection_gateway.get_all()
         return movies
