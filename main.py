@@ -1,9 +1,9 @@
 import sys
 
 from db import Database
-from db_schema import CREATE_USERS
+from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE
 
-from index_view import welcome
+from index_view import welcome, get_number_of_seats
 
 
 class Application:
@@ -11,6 +11,8 @@ class Application:
     def build(self):
         db = Database()
         db.cursor.execute(CREATE_USERS)
+        db.cursor.execute(CREATE_MOVIE_TABLE)
+
         # TODO: Build rest of the tables
         # TODO: Seed with inistial data - consider using another command for this
 
@@ -22,6 +24,7 @@ class Application:
     @classmethod
     def start(self):
         welcome()
+        get_number_of_seats()
 
 
 if __name__ == '__main__':

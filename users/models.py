@@ -1,10 +1,19 @@
 class UserModel:
-    def __init__(self, *, id, email, password):
+    def __init__(self, *, username, id):
+        self.username = username
         self.id = id
-        self.email = email
-        self.password = password
 
     @staticmethod
     def validate(email, password):
-        # TODO: Implement a validation -> Raise an error
-        pass
+        if len(password) < 8:
+            raise ValueError('Password is too short !')
+        if not any([x.isupper() for x in password]):
+            raise ValueError('Password must include one uppercase letter !')
+        n = False
+        for i in "[@_!#$%^&*()<>?/\|}{~:]":
+            if i in password:
+                n = True
+        if not n:
+            raise ValueError('Password must contain atleast one special character !')
+
+        
