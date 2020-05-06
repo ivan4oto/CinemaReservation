@@ -48,9 +48,11 @@ class ProjectionViews:
             print("Projection was successfully deleted")
 
     def get_projections_for_movie(self):
+        print("Step 2 (Movie): Choose a movie> ")
         movie_id = input('Enter movie id: ')
-        p_data = input('Enter new data(optical): ')
+        p_data = input('Enter data(optical): ')
 
         projections = self.controller.get_projections_for_movie(movie_id=movie_id, date=p_data)
         for p in projections:
             print(p)
+        return movie_id
