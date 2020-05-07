@@ -68,6 +68,7 @@ class ReservationGetaway:
     def convert_reservation_to_seats(self, reservations):
         row = self.END_ROW - 1
         col = self.END_COL - 1
+
         matrix = [[0 for x in range(row)] for y in range(col)]
 
         for reservation in reservations:
