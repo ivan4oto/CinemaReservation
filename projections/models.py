@@ -7,7 +7,7 @@ class ProjectionModel:
         self.movie_id = movie_id
 
     def __str__(self):
-        return f'Movie type : {self.movie_type}, projection date {self.projection_date} , projection time {self.projection_time}. '
+        return f'[{self.movie_id}] Type : {self.movie_type}, projection date {self.projection_date} , projection time {self.projection_time}. '
 
     @staticmethod
     def validate(movie_type, projection_time, projection_date):

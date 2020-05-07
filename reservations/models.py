@@ -8,7 +8,7 @@ class ReservationModel:
         self.projection_id = projection_id
 
     def __str__(self):
-        return f'''Reservation : \n'
+        return f'''Reservation : [{self.res_id}]\n'
                 Row : {self.row}, Col : {self.col},
                 User_id : {self.user_id}, Projection_id : {self.projection_id}'''
 
