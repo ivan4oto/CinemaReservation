@@ -6,17 +6,17 @@ CREATE_USERS = '''
     );
 '''
 
-CREATE_RESERVATIONS = '''
-    CREATE TABLE IF NOT EXISTS Reservations (
-        id INTEGER PRIMARY KEY NOT NULL,
-        user_id,
-        projection_id,
-        row INTEGER,
-        col INTEGER,
-        FOREIGN KEY (user_id) REFERENCES Users (id),
-        FOREIGN KEY (projection_id) REFERENCES Projections (id)
-    );
-'''
+# CREATE_RESERVATIONS = '''
+#     CREATE TABLE IF NOT EXISTS Reservations (
+#         id INTEGER PRIMARY KEY NOT NULL,
+#         user_id,
+#         projection_id,
+#         row INTEGER,
+#         col INTEGER,
+#         FOREIGN KEY (user_id) REFERENCES Users (id),
+#         FOREIGN KEY (projection_id) REFERENCES Projections (id)
+#     );
+# '''
 
 ADD_USER = f'''
     INSERT INTO users (username, hashed_password)
