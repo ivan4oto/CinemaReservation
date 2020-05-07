@@ -41,14 +41,11 @@ class ReservationViews:
         print("This is your reservation:")
         movie = self.movie_controller.get_movie_by_id(movie_id=movie_id)
         print(f'Movie: {movie.name}  ({movie.rating})')
-        print("\n")
         projection = self.projection_controller.get_projection_by_id(projection_id)
         print(f"Date and Time: {projection.projection_date} {projection.projection_time}  ({projection.movie_type})")
-        print("\n")
         print("Seats:")
         for seat in result:
             print(f'({seat[0]}, {seat[1]})')
-        print("\n")
         end = input("(Confirm - type 'finalize') > ")
 
         if end == "finalize":
