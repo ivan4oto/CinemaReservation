@@ -1,14 +1,15 @@
 from .users_gateway import UserGateway
-
+from .models import UserModel
 
 class UserContoller:
     def __init__(self):
         self.users_gateway = UserGateway()
+        self.logged_users = []
 
-    def create_user(self, email, password):
-        user = self.users_gateway.create(email=email, password=password)
-
-        # send email
-        # sync with Slack
-
+    def create_user(self, username, password):
+        user = self.users_gateway.create(username = username, password=password)
         return user
+
+    def log_user(self, username, password):
+        result =  self.users_gateway.verify_password(username = username, password = password)
+        return result

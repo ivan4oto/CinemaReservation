@@ -1,28 +1,31 @@
 import sys
 
 from db import Database
-from db_schema import CREATE_USERS
+from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATIONS, CREATE_PROJECTION_TABLE
+from index_view import login
 
-from index_view import welcome
 
+con = Database()
 
 class Application:
+
     @classmethod
     def build(self):
-        db = Database()
-        db.cursor.execute(CREATE_USERS)
+        with con.connection:
+            con.cursor.execute(CREATE_USERS)
+            con.cursor.execute(CREATE_MOVIE_TABLE)
+            con.cursor.execute(CREATE_PROJECTION_TABLE)
+            con.cursor.execute(CREATE_RESERVATIONS)
+
         # TODO: Build rest of the tables
         # TODO: Seed with inistial data - consider using another command for this
 
-        db.connection.commit()
-        db.connection.close()
 
         print('Done.')
 
     @classmethod
-    def start(self):
-        welcome()
-
+    def start(self): 
+        user = login()
 
 if __name__ == '__main__':
     command = sys.argv[1]

@@ -2,9 +2,10 @@ from movies.views import MovieViews
 from projections.views import ProjectionViews
 from reservations.views import ReservationViews
 from users.views import UserViews
+from movies.views import MovieViews
 
 
-def welcome():
+def login():
     print('Welcome to HackCinema!')
     command = int(input('Choose a command:\n  1 - log in\n  2 - sign up\n  Input: '))
     user_views = UserViews()

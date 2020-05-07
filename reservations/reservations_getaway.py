@@ -11,74 +11,58 @@ class ReservationGetaway:
         self.END_COL = 5
         self.START_ROW = 1
         self.END_ROW = 4
+        self.db = Database()
 
     def create_initial(self, projection_id):
-        db = Database()
-        for i in range(self.START_COL, self.END_COL):
-            for j in range(self.START_ROW, self.END_ROW):
-                db.cursor.execute(CREATE_RESERVATION, (i, j, 0, projection_id))
-        db.connection.commit()
-        db.connection.close()
+        with self.db.connection:
+            for i in range(self.START_COL, self.END_COL):
+                for j in range(self.START_ROW, self.END_ROW):
+                    self.db.cursor.execute(CREATE_RESERVATION, (i, j, 0, projection_id))
 
     def get_by_id(self, *, reservation_id):
-        db = Database()
+        with self.db.connection:
+            self.db.cursor.execute(GET_BY_ID, (reservation_id))
 
-        db.cursor.execute(GET_BY_ID, (reservation_id))
-
-        reservation_db = db.cursor.fetchall()
-        reservation = self.model.convert(reservation_db[0])
-        db.connection.commit()
-        db.connection.close()
+            reservation_db = self.db.cursor.fetchall()
+            reservation = self.model.convert(reservation_db[0])
 
         return reservation
 
     def get_all(self):
-        db = Database()
+        with self.db.connection:
+            self.db.cursor.execute(GET_ALL)
 
-        db.cursor.execute(GET_ALL)
+            reservation_db = self.db.cursor.fetchall()
+            result = []
 
-        reservation_db = db.cursor.fetchall()
-        result = []
-
-        for db_reservation in reservation_db:
-            reservation = self.model.convert(db_reservation)
-            result.append(reservation)
-
-        db.connection.commit()
-        db.connection.close()
+            for db_reservation in reservation_db:
+                reservation = self.model.convert(db_reservation)
+                result.append(reservation)
 
         return result
 
     def delete_projection(self, reservation_id):
-        db = Database()
-        db.cursor.execute(DELETE_RESERVATION, (reservation_id))
-        db.connection.commit()
-        db.connection.close()
+        with self.db.connection:
+            self.db.cursor.execute(DELETE_RESERVATION, (reservation_id))
 
     def get_free_seats_for_projection(self, *, projection_id):
-        db = Database()
+        with self.db.connection:
+            self.db.cursor.execute(CHECK_ALL_FREE_SEATS, (projection_id))
 
-        db.cursor.execute(CHECK_ALL_FREE_SEATS, (projection_id))
-
-        number_of_free_seats = db.cursor.fetchone()
-        db.connection.commit()
-        db.connection.close()
+            number_of_free_seats = self.db.cursor.fetchone()
 
         return number_of_free_seats[0]
 
     def get_all_seats_for_projection(self, *, projection_id):
-        db = Database()
+        with self.db.connection:
+            self.db.cursor.execute(GET_ALL_RESERVATION_FOR_PROJECTION, (projection_id))
 
-        db.cursor.execute(GET_ALL_RESERVATION_FOR_PROJECTION, (projection_id))
-
-        reservations = []
-        reservations_db = db.cursor.fetchall()
-        for db_reservation in reservations_db:
-            reservation = self.model.convert(db_reservation)
-            reservations.append(reservation)
-        db.connection.commit()
-        db.connection.close()
-
+            reservations = []
+            reservations_db = self.db.cursor.fetchall()
+            for db_reservation in reservations_db:
+                reservation = self.model.convert(db_reservation)
+                reservations.append(reservation)
+                
         return self.convert_reservation_to_seats(reservations)
 
     def convert_reservation_to_seats(self, reservations):
@@ -97,13 +81,10 @@ class ReservationGetaway:
         return matrix
 
     def check_seat_is_free(self, *, row, col, projection_id):
-        db = Database()
-
-        db.cursor.execute(CHECK_IS_SEAT_IS_FREE, (projection_id, col, row))
-        reservation_db = db.cursor.fetchall()
-        reservation = self.model.convert(reservation_db[0])
-        db.connection.commit()
-        db.connection.close()
+        with self.db.connection:
+            self.db.cursor.execute(CHECK_IS_SEAT_IS_FREE, (projection_id, col, row))
+            reservation_db = self.db.cursor.fetchall()
+            reservation = self.model.convert(reservation_db[0])
 
         if reservation.user_id == 0:
             return True
@@ -111,9 +92,7 @@ class ReservationGetaway:
         return False
 
     def make_reservation(self, *, list_of_reservations):
-        db = Database()
-        for seats in list_of_reservations:
-            # UPDATE reservations SET user_id = ? WHERE projection_id = ? and col = ? and row = ?;
-            db.cursor.execute(MAKE_RESERVATION, (seats[2], seats[3], seats[1], seats[0]))
-            db.connection.commit()
-        db.connection.close()
+        with self.db.connection:
+            for seats in list_of_reservations:
+                # UPDATE reservations SET user_id = ? WHERE projection_id = ? and col = ? and row = ?;
+                self.db.cursor.execute(MAKE_RESERVATION, (seats[2], seats[3], seats[1], seats[0]))
