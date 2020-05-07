@@ -5,7 +5,7 @@ class MovieModel:
         self.rating = rating
 
     def __str__(self):
-        return f'Movie name : {self.name} with rating {self.rating}. id: {self.movie_id}'
+        return f'[{self.movie_id}] {self.name} ({self.rating}).'
 
     @staticmethod
     def validate(name, rating):

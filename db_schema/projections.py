@@ -1,14 +1,12 @@
 CREATE_PROJECTION_TABLE = '''
      CREATE TABLE IF NOT EXISTS projections (
         id integer PRIMARY KEY NOT NULL,
-        movie_type varchar(50) UNIQUE,
-        projection_date varchar(50) UNIQUE,
-        projection_time varchar(50) UNIQUE,
+        movie_type varchar(50) ,
+        projection_date varchar(50) ,
+        projection_time varchar(50) ,
         movie_id INTEGER,
-        CONSTRAINT fk_movie foreign key (movie_id) REFERENCES movies(id));
+        foreign key (movie_id) REFERENCES movies(id));
 '''
-
-
 
 CREATE_PROJECTION = f'''
         INSERT INTO projections (movie_type, projection_date, projection_time, movie_id)

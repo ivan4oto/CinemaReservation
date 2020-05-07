@@ -22,4 +22,4 @@ class ProjectionModel:
     def convert(projection_db):
         return ProjectionModel(projections_id=projection_db[0], movie_type=projection_db[1],
                                projection_date=projection_db[2], projection_time=projection_db[3],
-                               movie_id=projection_db[4])
+                               movie_id=int(projection_db[4]))

@@ -1,14 +1,19 @@
 from projections.projections_getaway import ProjectionGetaway
-
+from reservations.reservations_getaway import ReservationGetaway
 
 
 class ProjectionController:
+
     def __init__(self):
         self.projection_gateway = ProjectionGetaway()
+        self.reservation_getaway = ReservationGetaway()
 
     def create_projection(self, movie_type, projection_date, projection_time, movie_id):
-        self.projection_gateway.create(movie_type=movie_type, projection_date=projection_date,
-                                       projection_time=projection_time, movie_id=movie_id)
+        projection_id = self.projection_gateway.create(movie_type=movie_type, projection_date=projection_date,
+                                                       projection_time=projection_time, movie_id=movie_id)
+
+        self.reservation_getaway.create_initial(projection_id=projection_id)
+
         return True
 
     def get_projection_by_id(self, projection_id):
@@ -17,11 +22,11 @@ class ProjectionController:
 
     def get_projections_for_movie(self, movie_id, date=""):
         if date == "":
-            self.projection_gateway.get_projections_for_movie_without_date(movie_id=movie_id)
-            return True
+            projections = self.projection_gateway.get_projections_for_movie_without_date(movie_id=movie_id)
+            return projections
         else:
-            self.projection_gateway.get_projections_for_movie_by_date(movie_id=movie_id, date=date)
-            return True
+            projections = self.projection_gateway.get_projections_for_movie_by_date(movie_id=movie_id, date=date)
+            return projections
 
     def get_all(self):
         movies = self.projection_gateway.get_all()

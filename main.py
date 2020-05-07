@@ -2,7 +2,7 @@ import sys
 
 from db import Database
 from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATIONS, CREATE_PROJECTION_TABLE
-from index_view import login, get_seats
+from index_view import login
 
 
 con = Database()
@@ -26,7 +26,6 @@ class Application:
     @classmethod
     def start(self): 
         user = login()
-        get_seats()
 
 if __name__ == '__main__':
     command = sys.argv[1]
