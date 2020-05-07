@@ -11,7 +11,5 @@ class UserContoller:
         return user
 
     def log_user(self, username, password):
-        if username in self.logged_users:
-            raise ValueError('User already logged in !')
-        user_id = self.users_gateway.select_user_id(username = username)
-        return self.users_gateway.verify_password(username = username, password = password)
+        result =  self.users_gateway.verify_password(username = username, password = password)
+        return result

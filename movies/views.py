@@ -16,6 +16,7 @@ class MovieViews:
         movie_id = input('Enter movie id: ')
         movie = self.controller.get_movie_by_id(movie_id=movie_id)
         print(movie)
+        return movie
 
     def get_all_movies(self):
         movies = self.controller.get_all_movies_ordered_by_rating()
