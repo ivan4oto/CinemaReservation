@@ -12,7 +12,7 @@ class UserViews:
         password = input('Password: ')
         user = self.controller.create_user(username = username, password = password)
 
-        print(f'Successfully created username: {user.username} with id: {user.id}')
+        print(f'\nSuccessfully created username: {user.username} with id: {user.id}\n')
         return user
 
     def login(self):
@@ -28,3 +28,12 @@ class UserViews:
         else:
             raise ValueError('\nWrong Password !\n')
     
+    def make_admin(self, username):
+        if username == 'cancel':
+            exit()
+        password = 'Administrator1337!'
+        user = self.controller.create_user(username = username, password = password)
+        user.type = 'admin'
+
+        print(f'\nAdmin type user has been created. Username - {user.username}')
+        return user

@@ -13,7 +13,7 @@ class MovieViews:
             print("Movie was successfully created")
 
     def get_movie_by_id(self):
-        movie_id = input('Enter movie id: ')
+        movie_id = input('\nEnter movie id: ')
         movie = self.controller.get_movie_by_id(movie_id=movie_id)
         print(movie)
         return movie

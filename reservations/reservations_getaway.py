@@ -59,6 +59,7 @@ class ReservationGetaway:
 
             reservations = []
             reservations_db = self.db.cursor.fetchall()
+            
             for db_reservation in reservations_db:
                 reservation = self.model.convert(db_reservation)
                 reservations.append(reservation)
@@ -79,13 +80,14 @@ class ReservationGetaway:
                 matrix[row][col] = "."
             else:
                 matrix[row][col] = "X"
-        print(matrix)
         return matrix
 
     def check_seat_is_free(self, *, row, col, projection_id):
         with self.db.connection:
+            print(col, row, "<--------")
             self.db.cursor.execute(CHECK_IS_SEAT_IS_FREE, (projection_id, col, row))
             reservation_db = self.db.cursor.fetchall()
+            print(reservation_db, "<-------")
             reservation = self.model.convert(reservation_db[0])
 
         if reservation.user_id == 0:

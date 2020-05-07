@@ -2,6 +2,7 @@ class UserModel:
     def __init__(self, *, username, id):
         self.username = username
         self.id = id
+        self.type = 'basic'
 
     @staticmethod
     def validate(email, password):

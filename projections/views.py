@@ -48,7 +48,7 @@ class ProjectionViews:
             print("Projection was successfully deleted")
 
     def get_projections_for_movie(self):
-        print("Step 2 (Movie): Choose a movie> ")
+        print("\nStep 2 (Movie): Choose a movie> \n")
         movie_id = input('Enter movie id: ')
         p_data = input('Enter date (optional): ')
 
