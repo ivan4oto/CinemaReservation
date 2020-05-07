@@ -83,11 +83,12 @@ class ReservationGetaway:
         return matrix
 
     def check_seat_is_free(self, *, row, col, projection_id):
+        if int(row) > self.END_ROW - 1 or int(col) > self.END_ROW -1 or int(row) < self.START_ROW or int(col) < self.START_COL:
+            raise ValueError("Ain't got that much seets !")
+        
         with self.db.connection:
-            print(col, row, "<--------")
             self.db.cursor.execute(CHECK_IS_SEAT_IS_FREE, (projection_id, col, row))
             reservation_db = self.db.cursor.fetchall()
-            print(reservation_db, "<-------")
             reservation = self.model.convert(reservation_db[0])
 
         if reservation.user_id == 0:

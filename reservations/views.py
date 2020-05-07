@@ -30,9 +30,10 @@ class ReservationViews:
 
         hall = self.controller.get_all_seats_for_projection(projection_id=projection_id)
         print("Available seats (marked with a dot):")
-        for i in hall:
+        print('\n  1 2 3')
+        for i in range(len(hall)):
             separator = ' '
-            print(separator.join(i))
+            print(i, separator.join(hall[i]))
         return projection_id
 
     def make_reservation(self, tickets, projection_id, movie_id):
