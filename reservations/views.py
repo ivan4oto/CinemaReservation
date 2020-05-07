@@ -11,16 +11,22 @@ class ReservationViews:
         self.movie_controller = MovieController()
 
     def choose_number_tickets(self):
-        tickets = input("Step 1 (User): Choose number of tickets> ")
+        tickets = input("\nStep 1 (User): Choose number of tickets> ")
+        if tickets == "cancel":
+            exit()
+
         return tickets
 
     def free_seats_for_movie(self):
-        print("Step 3 (Projection): Choose a projection")
+        print("\nStep 3 (Projection): Choose a projection")
         projection_id = input("Enter projection id : ")
+        if projection_id == "cancel":
+            exit()
 
         numbers = self.controller.take_all_free_seats_for_pr(projection_id=projection_id)
-
-        print(f'There are {numbers} available seats')
+        if numbers == 0:
+            raise ValueError('All seats have been taken !')
+        print(f'\nThere are {numbers} available seats')
 
         hall = self.controller.get_all_seats_for_projection(projection_id=projection_id)
         print("Available seats (marked with a dot):")
@@ -50,6 +56,9 @@ class ReservationViews:
             print(f'({seat[0]}, {seat[1]})')
         print("\n")
         end = input("(Confirm - type 'finalize') > ")
+
+        if end == "cancel":
+            exit()
 
         if end == "finalize":
             self.controller.make_reservation(result)

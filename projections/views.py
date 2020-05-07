@@ -50,7 +50,10 @@ class ProjectionViews:
     def get_projections_for_movie(self):
         print("Step 2 (Movie): Choose a movie> ")
         movie_id = input('Enter movie id: ')
-        p_data = input('Enter data(optical): ')
+        p_data = input('Enter date (optional): ')
+
+        if movie_id == 'cancel' or p_data == 'cancel':
+            exit()
 
         projections = self.controller.get_projections_for_movie(movie_id=movie_id, date=p_data)
         for p in projections:
