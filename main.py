@@ -1,7 +1,7 @@
 import sys
 
 from db import Database
-from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATIONS, CREATE_PROJECTION_TABLE, CREATE_MOVIE, CREATE_PROJECTION
+from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATION, CREATE_PROJECTION_TABLE, CREATE_MOVIE, CREATE_PROJECTION, CREATE_RESERVATIONS_TABLE
 from index_view import login, make_choice, UserModel
 
 
@@ -15,7 +15,7 @@ class Application:
             con.cursor.execute(CREATE_USERS)
             con.cursor.execute(CREATE_MOVIE_TABLE)
             con.cursor.execute(CREATE_PROJECTION_TABLE)
-            con.cursor.execute(CREATE_RESERVATIONS)
+            con.cursor.execute(CREATE_RESERVATIONS_TABLE)
 
             con.cursor.execute(CREATE_MOVIE,("Charlie's Angels", 4.6))
             con.cursor.execute(CREATE_MOVIE,("Fast and Furious", 6.6))
@@ -51,7 +51,7 @@ class Application:
 
 
 if __name__ == '__main__':
-    command = sys.argv[1]
+    command = input()
 
     if command == 'build':
         Application.build()
