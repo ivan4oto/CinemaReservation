@@ -7,16 +7,16 @@ class ProjectionModel:
         self.movie_id = movie_id
 
     def __str__(self):
-        return f'[{self.movie_id}] Type : {self.movie_type}, projection date {self.projection_date} , projection time {self.projection_time}. '
+        return f'Movie type : {self.movie_type}, projection date {self.projection_date} , projection time {self.projection_time}, id = {self.projections_id}. '
 
     @staticmethod
     def validate(movie_type, projection_time, projection_date):
-        if len(movie_type) == 1 or movie_type is None:
-            raise ValueError("Movie type should be bigger than 1 and should be not None!")
-        if len(projection_time) == 1 or projection_time is None:
-            raise ValueError("Projection time should be bigger than 1 and should be not None!")
-        if len(projection_date) == 1 or projection_date is None:
-            raise ValueError("Projection date should be bigger than 1 and should be not None!")
+        if len(movie_type) < 1:
+            raise ValueError("Movie type should be bigger than 1!")
+        if len(projection_time) < 8:
+            raise ValueError("Projection time should be bigger than 8!")
+        if len(projection_date) < 4 or projection_date is None:
+            raise ValueError("Projection date should be bigger than 4!")
 
     @staticmethod
     def convert(projection_db):

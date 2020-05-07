@@ -79,7 +79,7 @@ class ReservationGetaway:
                 matrix[row][col] = "."
             else:
                 matrix[row][col] = "X"
-
+        print(matrix)
         return matrix
 
     def check_seat_is_free(self, *, row, col, projection_id):
