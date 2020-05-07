@@ -62,12 +62,14 @@ class ReservationGetaway:
             for db_reservation in reservations_db:
                 reservation = self.model.convert(db_reservation)
                 reservations.append(reservation)
-                
+
         return self.convert_reservation_to_seats(reservations)
 
     def convert_reservation_to_seats(self, reservations):
+        row = self.END_ROW - 1
+        col = self.END_COL - 1
 
-        matrix = [[0 for x in range(self.END_COL)] for y in range(self.END_ROW)]
+        matrix = [[0 for x in range(row)] for y in range(col)]
 
         for reservation in reservations:
             row = reservation.row - 1
