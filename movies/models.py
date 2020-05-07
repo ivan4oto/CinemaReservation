@@ -9,8 +9,10 @@ class MovieModel:
 
     @staticmethod
     def validate(name, rating):
-        if len(name) == 1 or name is None:
-            raise ValueError("Name should be bigger than 1 and should be not None!")
+        if name is None:
+            raise ValueError("Name should be not None!")
+        if len(name) == 1:
+            raise ValueError("Name should be bigger than 1!")
         if rating < 0:
             raise ValueError("Rating should be bigger than zero!")
 
