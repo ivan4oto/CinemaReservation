@@ -9,14 +9,11 @@ con = Database()
 
 class Application:
 
-
-
     @classmethod
     def make_admin(self):
         userview = UserViews()
         adminname = input('\nYou have entered the Admin creation panel.\nTo create a new admin account please enter a username:\n')
         userview.make_admin(adminname)
-
 
     @classmethod
     def build(self):
@@ -35,17 +32,14 @@ class Application:
             con.cursor.execute(CREATE_MOVIE,("Rick and Morty", 9.9))
             con.cursor.execute(CREATE_MOVIE,("Die Hard", 8.2))
             print('3')
+
         proj_contoller.create_projection('3d', '2020-05-20', '19:30', 1)
         proj_contoller.create_projection('3d', '2020-05-21', '19:30', 1)
+        proj_contoller.create_projection('4dx', '2020-05-21', '15:30', 1)
         proj_contoller.create_projection('3d', '2020-05-20', '16:30', 2)
         proj_contoller.create_projection('2d', '2020-05-20', '12:30', 3)
         proj_contoller.create_projection('2d', '2020-05-23', '19:30', 3)
         proj_contoller.create_projection('3d', '2020-05-22', '19:30', 4)
-
-
-        # TODO: Build rest of the tables
-        # TODO: Seed with inistial data - consider using another command for this
-
 
         print('Done.')
 

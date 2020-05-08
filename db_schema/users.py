@@ -37,7 +37,7 @@ SELECT_USER_HASH_PASSWORD = f'''
     '''
 
 SELECT_ALL_USERS = f'''
-    SELECT id, username FROM users;
+    SELECT id, username, usertype FROM users;
     '''
 
 REMOVE_USER = f'''

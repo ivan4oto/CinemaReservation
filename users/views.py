@@ -44,3 +44,8 @@ class UserViews:
         result = self.controller.remove_user(username)
         if result:
             print(f'User {username} has been successfully deleted')
+
+    def show_all_users(self):
+        users = self.controller.get_users()
+        for u in users:
+            print(u)

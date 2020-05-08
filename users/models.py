@@ -4,6 +4,10 @@ class UserModel:
         self.id = id
         self.type = usertype
 
+    def __str__(self):
+        return f'username: {self.username}  account_type: {self.type}   id: {self.id}'
+
+
     @staticmethod
     def validate(email, password):
         if len(password) < 8:

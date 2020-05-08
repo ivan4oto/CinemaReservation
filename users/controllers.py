@@ -17,3 +17,6 @@ class UserContoller:
     def remove_user(self, username):
         result = self.users_gateway.remove_user(username = username)
         return result
+
+    def get_users(self):
+        return self.users_gateway.select_all_users()

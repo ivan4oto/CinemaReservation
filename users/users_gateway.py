@@ -31,7 +31,9 @@ class UserGateway:
 
     def select_all_users(self):
         raw_users = self.db.cursor.execute(SELECT_ALL_USERS)
-        return [self.model(**row) for row in raw_users]
+        users_data = raw_users.fetchall()
+        all_users = [self.model(username = i[1], id = i[0], usertype = i[2]) for i in users_data]
+        return all_users
 
     def verify_password(self, *, username, password):
         with self.db.connection:
