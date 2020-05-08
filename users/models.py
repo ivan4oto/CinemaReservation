@@ -1,8 +1,8 @@
 class UserModel:
-    def __init__(self, *, username, id):
+    def __init__(self, *, username, id, usertype = ''):
         self.username = username
         self.id = id
-        self.type = 'basic'
+        self.type = usertype
 
     @staticmethod
     def validate(email, password):

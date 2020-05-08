@@ -10,7 +10,7 @@ class UserViews:
             exit()
 
         password = input('Password: ')
-        user = self.controller.create_user(username = username, password = password)
+        user = self.controller.create_user(username = username, password = password, usertype = 'basic')
 
         print(f'\nSuccessfully created username: {user.username} with id: {user.id}\n')
         return user
@@ -32,8 +32,15 @@ class UserViews:
         if username == 'cancel':
             exit()
         password = 'Administrator1337!'
-        user = self.controller.create_user(username = username, password = password)
-        user.type = 'admin'
-
+        user = self.controller.create_user(username = username, password = password, usertype = 'admin')
         print(f'\nAdmin type user has been created. Username - {user.username}')
+        print(user.type)
         return user
+
+    def remove_user(self):
+        username = input('Username: ')
+        if username == "cancel":
+            exit()
+        result = self.controller.remove_user(username)
+        if result:
+            print(f'User {username} has been successfully deleted')

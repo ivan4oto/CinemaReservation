@@ -1,7 +1,7 @@
 from movies.views import MovieViews
 from projections.views import ProjectionViews
 from reservations.views import ReservationViews
-from users.views import UserViews
+from users.views import UserViews, UserModel
 from movies.views import MovieViews
 
 
@@ -34,3 +34,38 @@ def make_choice():
     projection_id = reservation_views.free_seats_for_movie()
     
     reservation_views.make_reservation(number_of_seats, projection_id, movie_id)
+
+
+def admin_panel():
+    user_views = UserViews()
+    movie_views = MovieViews()
+    projection_views = ProjectionViews()
+
+    print('Welcome to the ADMIN Control Panel\nYou have the following options:\n\n')
+    print('''
+    1. Create a movie
+    2. Update an existing movie
+    3. Delete an existing movie
+    
+    4. Create projection
+    5. Update projection
+    6. Delete projection    
+    
+    7. Delete user
+    ''')
+
+    command = input('\nEnter a command: ')
+
+    if command == '7':
+        user_views.remove_user()
+        admin_panel()
+
+    if command == '3':
+        movie_views.delete_movie()
+        admin_panel()
+
+    if command == '6':
+        projection_views.delete_movie()
+        admin_panel()
+    
+

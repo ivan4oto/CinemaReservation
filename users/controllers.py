@@ -6,10 +6,14 @@ class UserContoller:
         self.users_gateway = UserGateway()
         self.logged_users = []
 
-    def create_user(self, username, password):
-        user = self.users_gateway.create(username = username, password=password)
+    def create_user(self, username, password, usertype):
+        user = self.users_gateway.create(username = username, password=password, usertype = usertype)
         return user
 
     def log_user(self, username, password):
         result =  self.users_gateway.verify_password(username = username, password = password)
+        return result
+
+    def remove_user(self, username):
+        result = self.users_gateway.remove_user(username = username)
         return result

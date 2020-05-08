@@ -2,7 +2,7 @@ import bcrypt
 
 from db import Database
 from .models import UserModel
-from db_schema.users import CREATE_USERS, ADD_USER, SELECT_USER_ID, SELECT_USER_HASH_PASSWORD, SELECT_ALL_USERS
+from db_schema.users import CREATE_USERS, ADD_USER, SELECT_USER_ID, SELECT_USER_HASH_PASSWORD, SELECT_ALL_USERS, REMOVE_USER
 
 
 class UserGateway:
@@ -10,13 +10,14 @@ class UserGateway:
         self.model = UserModel
         self.db = Database()
 
-    def create(self, *, username, password):
+    def create(self, *, username, password, usertype):
         with self.db.connection:
             self.model.validate(username, password)
-            self.db.cursor.execute(ADD_USER, (username, self.get_hashed_password(password)))
+            self.db.cursor.execute(ADD_USER, (username, self.get_hashed_password(password), usertype))
             self.db.cursor.execute(SELECT_USER_ID, (username,))
             user_id = self.db.cursor.fetchone()
             user = self.model(username = username, id = user_id[0])
+            user.type = usertype
             return user
 
     def select_user_id(self, *, username):
@@ -43,7 +44,7 @@ class UserGateway:
             if result:
                 self.db.cursor.execute(SELECT_USER_ID, (username,))
                 user_id = self.db.cursor.fetchone()
-                return self.model(username = username,id = user_id[0] )
+                return self.model(username = username,id = user_id[0], usertype = user_id[2] )
             else:
                 raise ValueError('Wrong password !')
             
@@ -52,3 +53,8 @@ class UserGateway:
 
     def check_password(self, password, hashed_password):
         return bcrypt.checkpw(password, hashed_password)
+
+    def remove_user(self, *, username):
+        with self.db.connection:
+            self.db.cursor.execute(REMOVE_USER, (username,))
+        return True

@@ -2,7 +2,8 @@ CREATE_USERS = '''
     CREATE TABLE IF NOT EXISTS Users (
         id integer PRIMARY KEY NOT NULL,
         username varchar(50) UNIQUE,
-        hashed_password varchar(250)
+        hashed_password varchar(250),
+        usertype VARCHAR(25)
     );
 '''
 
@@ -19,12 +20,12 @@ CREATE_USERS = '''
 # '''
 
 ADD_USER = f'''
-    INSERT INTO users (username, hashed_password)
-    VALUES ( ? , ? );
+    INSERT INTO users (username, hashed_password, usertype)
+    VALUES ( ? , ? , ? );
     '''
 
 SELECT_USER_ID = f'''
-    SELECT id, username
+    SELECT id, username, usertype
     FROM users
     WHERE username = ?;
     '''
@@ -39,3 +40,7 @@ SELECT_ALL_USERS = f'''
     SELECT id, username FROM users;
     '''
 
+REMOVE_USER = f'''
+    DELETE FROM Users
+    WHERE username = ?;
+'''
