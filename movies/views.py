@@ -1,4 +1,5 @@
 from movies.controllers import MovieController
+from tabulate import tabulate
 
 
 class MovieViews:
@@ -20,8 +21,11 @@ class MovieViews:
 
     def get_all_movies(self):
         movies = self.controller.get_all_movies_ordered_by_rating()
-        for m in movies:
-            print(m)
+        movies_table = [[m.movie_id, m.name, m.rating] for m in movies]
+        movies_headers = ['ID', 'Name', 'Rating']
+        print(tabulate(movies_table, movies_headers, tablefmt = 'psql'))
+        # for m in movies:
+        #     print(m)
 
     def update_movie_name(self):
         movie_id = input('Enter movie id: ')

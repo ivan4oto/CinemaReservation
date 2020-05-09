@@ -1,5 +1,5 @@
 from projections.controllers import ProjectionController
-
+from tabulate import tabulate
 
 class ProjectionViews:
     def __init__(self):
@@ -56,6 +56,11 @@ class ProjectionViews:
             exit()
 
         projections = self.controller.get_projections_for_movie(movie_id=movie_id, date=p_data)
-        for p in projections:
-            print(p)
+        projections_table = [[p.projections_id, p.movie_type, p.projection_date, p.projection_time] for p in projections]
+        projections_headers = ['ID', 'Type', 'Date', 'Time']
+        print(tabulate(projections_table, projections_headers, tablefmt = 'psql'))
+
+        # for p in projections:
+        #     print(p)
+
         return movie_id

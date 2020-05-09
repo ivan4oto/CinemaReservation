@@ -1,4 +1,4 @@
-from movies.movies_getaway import MovieGateway
+from .movies_getaway import MovieGateway
 
 
 class MovieController:

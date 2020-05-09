@@ -1,5 +1,4 @@
 import bcrypt
-
 from db import Database
 from .models import UserModel
 from db_schema.users import CREATE_USERS, ADD_USER, SELECT_USER_ID, SELECT_USER_HASH_PASSWORD, SELECT_ALL_USERS, REMOVE_USER
