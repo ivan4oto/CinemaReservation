@@ -3,10 +3,11 @@ from projections.views import ProjectionViews
 from reservations.views import ReservationViews
 from users.views import UserViews, UserModel
 from movies.views import MovieViews
+from templates import banner
 
 
 def login():
-    print('Welcome to HackCinema!\n')
+    print(banner)
     command = int(input('Choose a command:\n  1 - log in\n  2 - sign up\n\n  Input: '))
     user_views = UserViews()
     if command == 1:

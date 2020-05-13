@@ -1,3 +1,4 @@
+from getpass import getpass
 from .controllers import UserContoller, UserModel, UserGateway
 
 class UserViews:
@@ -9,7 +10,7 @@ class UserViews:
         if username == 'cancel':
             exit()
 
-        password = input('Password: ')
+        password = getpass('Password: ')
         user = self.controller.create_user(username = username, password = password, usertype = 'basic')
 
         print(f'\nSuccessfully created username: {user.username} with id: {user.id}\n')
@@ -20,7 +21,7 @@ class UserViews:
         if username == 'cancel':
             exit()
 
-        password = input('Password: ')
+        password = getpass('Password: ')
         result = self.controller.log_user(username, password)
         if result:
             print("\nYou have successfully logged in !\n")

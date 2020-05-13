@@ -1,5 +1,4 @@
 import sys
-
 from db import Database
 from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATION, CREATE_PROJECTION_TABLE, CREATE_MOVIE, CREATE_PROJECTION, CREATE_RESERVATIONS_TABLE
 from index_view import login, make_choice, UserViews, UserModel, admin_panel
