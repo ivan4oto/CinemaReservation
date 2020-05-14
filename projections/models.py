@@ -1,10 +1,19 @@
-class ProjectionModel:
-    def __init__(self, *, projections_id, movie_type, projection_date, projection_time, movie_id):
-        self.projections_id = projections_id
-        self.movie_type = movie_type
-        self.projection_date = projection_date
-        self.projection_time = projection_time
-        self.movie_id = movie_id
+from sqlalchemy.orm import relationship
+
+from db import Database
+from sqlalchemy import Column, Integer, String, REAL, ForeignKey
+
+from movies.models import Movies
+
+
+class Projection(Database.base):
+    __tablename__ = 'projections'
+    id = Column(Integer, primary_key=True, nullable=False)
+    movie_type = Column(String)
+    projection_date = Column(String)
+    projection_time = Column(String)
+    movie_id = Column(Integer, ForeignKey(Movies.id))
+    projections = relationship(Movies, backref="projections")
 
     def __str__(self):
         return f'Movie type : {self.movie_type}, projection date {self.projection_date} , projection time {self.projection_time}, id = {self.projections_id}. '
@@ -20,6 +29,6 @@ class ProjectionModel:
 
     @staticmethod
     def convert(projection_db):
-        return ProjectionModel(projections_id=projection_db[0], movie_type=projection_db[1],
-                               projection_date=projection_db[2], projection_time=projection_db[3],
-                               movie_id=int(projection_db[4]))
+        return Projection(projections_id=projection_db[0], movie_type=projection_db[1],
+                          projection_date=projection_db[2], projection_time=projection_db[3],
+                          movie_id=int(projection_db[4]))

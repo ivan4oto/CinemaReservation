@@ -1,11 +1,11 @@
 import unittest
-from projections.models import ProjectionModel
+from projections.models import Projection
 
 
 class MyTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.projection_model = ProjectionModel
+        cls.projection_model = Projection
 
     def test_validate_when_given_invalid_type_return_ex(self):
         with self.assertRaises(ValueError):

@@ -2,13 +2,16 @@ import sys
 from db import Database
 from index_view import login, make_choice, UserViews, admin_panel
 from projections.controllers import ProjectionController
+from projections.projections_getaway import ProjectionGetaway
+from reservations.reservations_getaway import ReservationGetaway
 from users.users_gateway import UserGateway
 from movies.movies_getaway import MovieGateway
 
-
-
 user_gate = UserGateway()
 movies_gate = MovieGateway()
+projection_gate = ProjectionGetaway()
+reservation_gate = ReservationGetaway()
+
 
 class Application:
 
@@ -22,10 +25,12 @@ class Application:
     def build(self):
         user_gate.create_user_table()
         movies_gate.create_movies_table()
+        projection_gate.create_projection_table()
+        reservation_gate.create_reservation_table()
         print('Done.')
 
     @classmethod
-    def start(self): 
+    def start(self):
         user = login()
         if user.usertype == 'admin':
             admin_panel()
@@ -33,7 +38,7 @@ class Application:
 
         else:
             make_choice()
-        
+
 
 
 if __name__ == '__main__':
