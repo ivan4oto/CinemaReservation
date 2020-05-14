@@ -1,5 +1,4 @@
 from .users_gateway import UserGateway
-from .models import UserModel
 
 class UserContoller:
     def __init__(self):

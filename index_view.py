@@ -1,7 +1,7 @@
 from movies.views import MovieViews
 from projections.views import ProjectionViews
 from reservations.views import ReservationViews
-from users.views import UserViews, UserModel
+from users.views import UserViews
 from movies.views import MovieViews
 from templates import banner
 
