@@ -1,11 +1,18 @@
-class MovieModel:
-    def __init__(self, *, movie_id, name, rating):
-        self.movie_id = movie_id
-        self.name = name
-        self.rating = rating
+from sqlalchemy import Column, Integer, String, REAL
+from sqlalchemy.ext.declarative import declarative_base
+from db import Database
+
+class Movies(Database.base):
+    __tablename__ = 'Movies'
+    id = Column(Integer, primary_key = True, nullable = False)
+    movie_name = Column(String)
+    rating = Column(REAL, nullable = False)
 
     def __str__(self):
-        return f'[{self.movie_id}] {self.name} ({self.rating}).'
+        return "Movie name: {}, with rating: {}, and ID: {}".format(self.movie_name, self.rating, self.id)
+
+    def __repr__(self):
+        return self.__str__()
 
     @staticmethod
     def validate(name, rating):
@@ -18,4 +25,4 @@ class MovieModel:
 
     @staticmethod
     def convert(movie_db):
-        return MovieModel(movie_id=movie_db[0], name=movie_db[1], rating=movie_db[2])
+        return Movies(id=movie_db[0], movie_name=movie_db[1], rating=movie_db[2])

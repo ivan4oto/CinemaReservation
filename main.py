@@ -1,13 +1,14 @@
 import sys
 from db import Database
-from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATION, CREATE_PROJECTION_TABLE, CREATE_MOVIE, CREATE_PROJECTION, CREATE_RESERVATIONS_TABLE
 from index_view import login, make_choice, UserViews, admin_panel
 from projections.controllers import ProjectionController
 from users.users_gateway import UserGateway
+from movies.movies_getaway import MovieGateway
 
 
 
-gate = UserGateway()
+user_gate = UserGateway()
+movies_gate = MovieGateway()
 
 class Application:
 
@@ -19,7 +20,8 @@ class Application:
 
     @classmethod
     def build(self):
-        gate.create_user_table()
+        user_gate.create_user_table()
+        movies_gate.create_movies_table()
         print('Done.')
 
     @classmethod

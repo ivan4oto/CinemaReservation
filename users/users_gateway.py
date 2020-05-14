@@ -1,6 +1,6 @@
 import bcrypt
 from db import Database
-from .models import Users, Base
+from .models import Users
 from sqlalchemy.orm import sessionmaker
 
 class UserGateway:
@@ -9,7 +9,7 @@ class UserGateway:
         self.session = sessionmaker(bind = self.db.engine)
 
     def create_user_table(self):
-        Base.metadata.create_all(self.db.engine)
+        self.db.base.metadata.create_all(self.db.engine)
 
     def create(self, *, username, password, usertype):       
         Users.validate(username, password)

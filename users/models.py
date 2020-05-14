@@ -1,27 +1,20 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from db import Database
 
 
 
-Base = declarative_base()
-
-class Users(Base):
+class Users(Database.base):
     __tablename__ = 'Users'
     id = Column(Integer, primary_key = True)
     username = Column(String)
     hashed_password = Column(String)
     usertype = Column(String)   
 
+    def __str__(self):
+        return "Username: {} id: {} acc_type: {}".format(self.username, self.id, self.usertype)
 
-# class UserModel:
-#     def __init__(self, *, username, id, usertype = ''):
-#         self.username = username
-#         self.id = id
-#         self.type = usertype
-
-#     def __str__(self):
-#         return f'username: {self.username}  account_type: {self.type}   id: {self.id}'
+    def __repr__(self):
+        return self.__str__()
 
 
     @staticmethod
