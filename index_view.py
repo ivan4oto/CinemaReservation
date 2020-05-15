@@ -1,7 +1,7 @@
 from movies.views import MovieViews
 from projections.views import ProjectionViews
 from reservations.views import ReservationViews
-from users.views import UserViews, UserModel
+from users.views import UserViews
 from movies.views import MovieViews
 from templates import banner
 
@@ -64,6 +64,23 @@ def admin_panel():
         movie_views.create_movie()
         admin_panel()
 
+    if command == '2':
+        print('''
+        What do you wish to update ?
+
+        1. Update movie name
+        2. Update movie rating      
+        
+        ''')
+        new_command = input('Enter a command: ')
+        if new_command == '1':
+            movie_views.update_movie_name()
+            admin_panel()
+
+        elif new_command == '2':
+            movie_views.update_movie_rating()
+            admin_panel()
+            
     if command == '3':
         movie_views.delete_movie()
         admin_panel()

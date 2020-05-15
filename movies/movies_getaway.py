@@ -1,46 +1,68 @@
 from db import Database
-from db_schema.movies import CREATE_MOVIE, GET_BY_ID, GET_ALL_MOVIES_ORDERED_BY_RATING, UPDATE_MOVIE_NAME, \
-    UPDATE_MOVIE_RATING, DELETE_MOVIE
-from movies.models import MovieModel
+
+from movies.models import Movies
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select
 
 
 class MovieGateway:
     def __init__(self):
-        self.model = MovieModel
         self.db = Database()
+        self.session = sessionmaker(bind = self.db.engine)
+
+
+    def create_movies_table(self):
+        self.db.base.metadata.create_all(self.db.engine)
+
     def create(self, *, name, rating):
-        with self.db.connection:
-            self.model.validate(name, rating)
-            self.db.cursor.execute(CREATE_MOVIE, (name, rating))
+        session = self.db.session()
+        Movies.validate(name, rating)
+        movie = Movies(movie_name = name, rating = rating)
+        session.add(movie)
+        session.commit()
 
     def get_by_id(self, *, movie_id):
-        with self.db.connection:
-            self.db.cursor.execute(GET_BY_ID, (movie_id))
+        session = self.db.session()
+        movie = session.query(Movies).\
+                filter(Movies.id == movie_id).\
+                one()
 
-            movie_db = self.db.cursor.fetchall()
-            movie = self.model.convert(movie_db[0])
+        session.commit()
         return movie
 
     def get_all_movies_ordered_by_rating(self):
-        with self.db.connection:
-            self.db.cursor.execute(GET_ALL_MOVIES_ORDERED_BY_RATING)
+        session = self.db.session()
+        s = select([Movies]).\
+            order_by(Movies.rating)
 
-            movies_db = self.db.cursor.fetchall()
-            result = []
-            for db_movie in movies_db:
-                movie = self.model.convert(db_movie)
-                result.append(movie)
-
-        return result
+        movies_list = session.execute(s)
+        return movies_list
 
     def update_movie_name(self, movie_id, new_name):
-        with self.db.connection:
-            self.db.cursor.execute(UPDATE_MOVIE_NAME, (new_name, movie_id))
+        session = self.db.session()
+        movie = session.query(Movies).filter(Movies.id == movie_id).one()
+        movie.movie_name = new_name
+        session.commit()
+
+        # conn = self.db.engine.connect()
+        # stmt = update(Movies).where(Movies.id == movie_id).\
+        #         values(name = new_name)
+        # conn.execute(stmt)
+
+        # session = self.db.session()
+        # session.query().\
+        #     filter(Movies.id == movie_id).\
+        #     update({"movie_name": (new_name)})
+        # session.commit()
 
     def update_movie_rating(self, movie_id, new_rating):
-        with self.db.connection:
-            self.db.cursor.execute(UPDATE_MOVIE_RATING, (new_rating, movie_id))
+        session = self.db.session()
+        movie = session.query(Movies).filter(Movies.id == movie_id).one()
+        movie.rating = new_rating
+        session.commit()
+
 
     def delete_movie(self, movie_id):
-        with self.db.connection:
-            self.db.cursor.execute(DELETE_MOVIE, (movie_id))
+        session = self.db.session()
+        session.query(Movies).filter(Movies.id == movie_id).delete()
+        session.commit()

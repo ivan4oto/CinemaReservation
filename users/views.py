@@ -1,5 +1,5 @@
 from getpass import getpass
-from .controllers import UserContoller, UserModel, UserGateway
+from .controllers import UserContoller, UserGateway
 
 class UserViews:
     def __init__(self):
@@ -35,7 +35,7 @@ class UserViews:
         password = 'Administrator1337!'
         user = self.controller.create_user(username = username, password = password, usertype = 'admin')
         print(f'\nAdmin type user has been created. Username - {user.username}')
-        print(user.type)
+        print(user.usertype)
         return user
 
     def remove_user(self):

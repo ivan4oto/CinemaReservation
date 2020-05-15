@@ -1,78 +1,72 @@
+from sqlalchemy.orm import sessionmaker
+
 from db import Database
-from db_schema.projections import CREATE_PROJECTION, GET_BY_ID, GET_ALL, DELETE_PROJECTION, UPDATE_DATE, UPDATE_TIME, \
-    GET_PROJECTIONS_FOR_MOVIE_BY_DATE, GET_PROJECTIONS_FOR_MOVIE_WITHOUT_DATE
-from projections.models import ProjectionModel
+from movies.movies_getaway import MovieGateway
+from projections.models import Projection
 
 
 class ProjectionGetaway:
     def __init__(self):
-        self.model = ProjectionModel
         self.db = Database()
+        self.session = sessionmaker(bind=self.db.engine)
+        self.movie_gateway = MovieGateway()
+
+    def create_projection_table(self):
+        self.db.base.metadata.create_all(self.db.engine)
 
     def create(self, *, movie_type, projection_date, projection_time, movie_id):
-        with self.db.connection:
-            self.model.validate(movie_type, projection_date, projection_time)
-            self.db.cursor.execute(CREATE_PROJECTION, (movie_type, projection_date, projection_time, movie_id))
-            self.db.connection.commit()
-            projection_id = self.db.cursor.lastrowid
 
-        return projection_id
+        session = self.db.session()
+        Projection.validate(movie_type, projection_date, projection_time)
+        movie = self.movie_gateway.get_by_id(movie_id=movie_id)
+        movie.projections.append(
+            Projection(movie_type=movie_type, projection_date=projection_date, projection_time=projection_time))
+        session.commit()
 
     def get_by_id(self, *, projection_id):
-        with self.db.connection:
-            self.db.cursor.execute(GET_BY_ID, (projection_id))
 
-            projection_db = self.db.cursor.fetchall()
-            projection = self.model.convert(projection_db[0])
+        session = self.db.session()
+        projection = session.query(Projection). \
+            filter(Projection.id == projection_id). \
+            one()
 
+        session.commit()
         return projection
 
     def get_all(self):
-        with self.db.connection:
-            self.db.cursor.execute(GET_ALL)
+        session = self.db.session()
+        projections = session.query(Projection).all()
+        session.commit()
 
-            projection_db = self.db.cursor.fetchall()
-            result = []
-
-            for db_projection in projection_db:
-                projection = self.model.convert(db_projection)
-                result.append(projection)
-
-        return result
+        return projections
 
     def get_projections_for_movie_by_date(self, *, movie_id, date):
-        with self.db.connection:
-            self.db.cursor.execute(GET_PROJECTIONS_FOR_MOVIE_BY_DATE, (movie_id, date))
 
-            projection_db = self.db.cursor.fetchall()
-            result = []
-
-            for db_projection in projection_db:
-                projection = self.model.convert(db_projection)
-                result.append(projection)
-
+        movie = self.movie_gateway.get_by_id(movie_id=movie_id)
+        result = []
+        for p in movie.projections:
+            if p.projection_date == date:
+                result.append(p)
         return result
 
     def get_projections_for_movie_without_date(self, *, movie_id):
-        with self.db.connection:
-            self.db.cursor.execute(GET_PROJECTIONS_FOR_MOVIE_WITHOUT_DATE, (movie_id))
 
-            projection_db = self.db.cursor.fetchall()
-            result = []
-            for db_projection in projection_db:
-                projection = self.model.convert(db_projection)
-                result.append(projection)
-
-        return result
+        movie = self.movie_gateway.get_by_id(movie_id=movie_id)
+        return movie.projections
 
     def update_date(self, projection_id, new_date):
-        with self.db.connection:
-            self.db.cursor.execute(UPDATE_DATE, (new_date, projection_id))
+        session = self.db.session()
+        projection = session.query(Projection).filter(Projection.id == projection_id).one()
+        projection.projection_date = new_date
+        session.commit()
 
     def update_time(self, projection_id, new_time):
-        with self.db.connection:
-            self.db.cursor.execute(UPDATE_TIME, (new_time, projection_id))
+        session = self.db.session()
+        projection = session.query(Projection).filter(Projection.id == projection_id).one()
+        projection.projection_date = new_time
+        session.commit()
 
     def delete_projection(self, projection_id):
-        with self.db.connection:
-            self.db.cursor.execute(DELETE_PROJECTION, (projection_id))
+        session = self.db.session()
+        session.query(Projection).filter(Projection.id == projection_id).delete()
+        session.commit()

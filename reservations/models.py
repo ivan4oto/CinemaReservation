@@ -1,11 +1,21 @@
-class ReservationModel:
+from sqlalchemy.orm import relationship
 
-    def __init__(self, *, row, col, user_id, projection_id, res_id=None):
-        self.res_id = res_id
-        self.row = row
-        self.col = col
-        self.user_id = user_id
-        self.projection_id = projection_id
+from db import Database
+from sqlalchemy import Column, Integer, String, REAL, ForeignKey
+
+from projections.models import Projection
+from users.models import Users
+
+
+class Reservation(Database.base):
+    __tablename__ = 'reservations'
+    id = Column(Integer, primary_key=True, nullable=False)
+    row = Column(Integer)
+    col = Column(Integer)
+    projection_id = Column(Integer, ForeignKey(Projection.id))
+    reservations_projection = relationship(Projection, backref="reservations")
+    user_id = Column(Integer, ForeignKey(Users.id), nullable=True)
+    reservations_user = relationship(Users, backref="reservations")
 
     def __str__(self):
         return f'''Reservation : [{self.res_id}]\n'

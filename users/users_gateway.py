@@ -1,53 +1,52 @@
 import bcrypt
 from db import Database
-from .models import UserModel
-from db_schema.users import CREATE_USERS, ADD_USER, SELECT_USER_ID, SELECT_USER_HASH_PASSWORD, SELECT_ALL_USERS, REMOVE_USER
-
+from .models import Users
+from sqlalchemy.orm import sessionmaker
 
 class UserGateway:
     def __init__(self):
-        self.model = UserModel
         self.db = Database()
+        self.session = sessionmaker(bind = self.db.engine)
 
-    def create(self, *, username, password, usertype):
-        with self.db.connection:
-            self.model.validate(username, password)
-            self.db.cursor.execute(ADD_USER, (username, self.get_hashed_password(password), usertype))
-            self.db.cursor.execute(SELECT_USER_ID, (username,))
-            user_id = self.db.cursor.fetchone()
-            user = self.model(username = username, id = user_id[0])
-            user.type = usertype
-            return user
+    def create_user_table(self):
+        self.db.base.metadata.create_all(self.db.engine)
+
+    def create(self, *, username, password, usertype):       
+        Users.validate(username, password)
+        password = self.get_hashed_password(password)
+
+        session = self.db.session()
+        user = Users(username = username, hashed_password = password, usertype = usertype)
+        session.add(user)
+        session.commit()
+
+        return user
 
     def select_user_id(self, *, username):
-        with self.db.connection:
-            self.db.cursor.execute(SELECT_USER_ID, (username,))
-            user_id = self.db.cursor.fetchone()
-            if user_id is None:
-                raise ValueError("User not found !")
-            else:
-                return user_id[0]
+        session = self.db.session()
+        userid = session.query(Users).filter(Users.username == username).one()        
+        session.commit()
+
+        return userid.id
 
     def select_all_users(self):
-        raw_users = self.db.cursor.execute(SELECT_ALL_USERS)
-        users_data = raw_users.fetchall()
-        all_users = [self.model(username = i[1], id = i[0], usertype = i[2]) for i in users_data]
-        return all_users
+        session = self.db.session()
+        users = session.query(Users).all()
+        session.commit()
+
+        return users
 
     def verify_password(self, *, username, password):
-        with self.db.connection:
-            self.db.cursor.execute(SELECT_USER_HASH_PASSWORD, (username,))
-            hashed = self.db.cursor.fetchone()
-            if hashed == None:
-                raise ValueError('User not found !')
+        session = self.db.session()
+        try:
+            user = session.query(Users).filter(Users.username == username).one()
+            hashed_pass = user.hashed_password
+            result = self.check_password(password, hashed_pass)
 
-            result = self.check_password(password, hashed[0])
             if result:
-                self.db.cursor.execute(SELECT_USER_ID, (username,))
-                user_id = self.db.cursor.fetchone()
-                return self.model(username = username,id = user_id[0], usertype = user_id[2] )
-            else:
-                raise ValueError('Wrong password !')
+                return user
+        except:
+            raise ValueError('Wrong password !')
             
     def get_hashed_password(self, password):
         return bcrypt.hashpw(password, bcrypt.gensalt())
@@ -56,6 +55,8 @@ class UserGateway:
         return bcrypt.checkpw(password, hashed_password)
 
     def remove_user(self, *, username):
-        with self.db.connection:
-            self.db.cursor.execute(REMOVE_USER, (username,))
+        session = self.db.session()
+        session.query(Users).filter(Users.username == username).delete()
+        session.commit()
+
         return True

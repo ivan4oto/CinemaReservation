@@ -1,10 +1,17 @@
 import sys
 from db import Database
-from db_schema import CREATE_USERS, CREATE_MOVIE_TABLE, CREATE_RESERVATION, CREATE_PROJECTION_TABLE, CREATE_MOVIE, CREATE_PROJECTION, CREATE_RESERVATIONS_TABLE
-from index_view import login, make_choice, UserViews, UserModel, admin_panel
+from index_view import login, make_choice, UserViews, admin_panel
 from projections.controllers import ProjectionController
+from projections.projections_getaway import ProjectionGetaway
+from reservations.reservations_getaway import ReservationGetaway
+from users.users_gateway import UserGateway
+from movies.movies_getaway import MovieGateway
 
-con = Database()
+user_gate = UserGateway()
+movies_gate = MovieGateway()
+projection_gate = ProjectionGetaway()
+reservation_gate = ReservationGetaway()
+
 
 class Application:
 
@@ -16,42 +23,22 @@ class Application:
 
     @classmethod
     def build(self):
-        proj_contoller = ProjectionController()
-
-        with con.connection:
-            print('1')
-            con.cursor.execute(CREATE_USERS)
-            con.cursor.execute(CREATE_MOVIE_TABLE)
-            con.cursor.execute(CREATE_PROJECTION_TABLE)
-            con.cursor.execute(CREATE_RESERVATIONS_TABLE)
-            print('2')
-
-            con.cursor.execute(CREATE_MOVIE,("Charlie's Angels", 4.6))
-            con.cursor.execute(CREATE_MOVIE,("Fast and Furious", 6.6))
-            con.cursor.execute(CREATE_MOVIE,("Rick and Morty", 9.9))
-            con.cursor.execute(CREATE_MOVIE,("Die Hard", 8.2))
-            print('3')
-
-        proj_contoller.create_projection('3d', '2020-05-20', '19:30', 1)
-        proj_contoller.create_projection('3d', '2020-05-21', '19:30', 1)
-        proj_contoller.create_projection('4dx', '2020-05-21', '15:30', 1)
-        proj_contoller.create_projection('3d', '2020-05-20', '16:30', 2)
-        proj_contoller.create_projection('2d', '2020-05-20', '12:30', 3)
-        proj_contoller.create_projection('2d', '2020-05-23', '19:30', 3)
-        proj_contoller.create_projection('3d', '2020-05-22', '19:30', 4)
-
+        user_gate.create_user_table()
+        movies_gate.create_movies_table()
+        projection_gate.create_projection_table()
+        reservation_gate.create_reservation_table()
         print('Done.')
 
     @classmethod
-    def start(self): 
+    def start(self):
         user = login()
-        if user.type == 'admin':
+        if user.usertype == 'admin':
             admin_panel()
             exit()
 
         else:
             make_choice()
-        
+
 
 
 if __name__ == '__main__':
