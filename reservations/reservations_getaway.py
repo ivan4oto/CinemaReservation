@@ -1,10 +1,10 @@
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import null
 
 from db import Database
-from db_schema.reservations import CREATE_RESERVATION, GET_BY_ID, GET_ALL, CHECK_ALL_FREE_SEATS, CHECK_IS_SEAT_IS_FREE, \
-    MAKE_RESERVATION, DELETE_RESERVATION, GET_ALL_RESERVATION_FOR_PROJECTION
 from projections.projections_getaway import ProjectionGetaway
 from reservations.models import Reservation
+from users.models import Users
 from users.users_gateway import UserGateway
 
 
@@ -24,12 +24,14 @@ class ReservationGetaway:
         self.db.base.metadata.create_all(self.db.engine)
 
     def create_initial(self, projection_id):
-
-        projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
+        session = self.db.session()
+        #projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
 
         for i in range(self.START_COL, self.END_COL):
             for j in range(self.START_ROW, self.END_ROW):
-                projection.reservations.append(Reservation(row=i, col=j, user_id=0))
+                r = Reservation(row = i, col = j, user_id = 0, projection_id = projection_id)
+                session.add(r)
+        session.commit()
 
     def get_by_id(self, *, reservation_id):
 
@@ -55,13 +57,15 @@ class ReservationGetaway:
         session.commit()
 
     def get_free_seats_for_projection(self, *, projection_id):
-
-        projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
-
+        session = self.db.session()
+        reservations = session.query(Reservation).filter(Reservation.projection_id == projection_id).all()
         result = 0
-        for r in projection_id.reservations:
+        for r in reservations:
             if r.user_id == 0:
-                result = result + 1
+                result += 1
+        session.commit()
+        
+        return result
 
         # with self.db.connection:
         #     self.db.cursor.execute(CHECK_ALL_FREE_SEATS, (projection_id))
@@ -103,44 +107,34 @@ class ReservationGetaway:
                 matrix[row][col] = "X"
         return matrix
 
-    def check_seat_is_free(self, *, row, col, projection_id):
+    def check_seat_is_free(self, *, row, col, projection_id, username):
+        session = self.db.session()
+        #userid = session.query(Users).filter(Users.username == username).one()    
         if int(row) > self.END_ROW - 1 or int(col) > self.END_ROW - 1 or int(row) < self.START_ROW or int(
                 col) < self.START_COL:
             raise ValueError("Ain't got that much seets !")
 
-        projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
-
-        for r in projection.reservations:
-            if r.row == row and r.col == col:
-                if r.user_id == 0:
-                    return True
-                else:
-                    return False
-
-        # with self.db.connection:
-        #     self.db.cursor.execute(CHECK_IS_SEAT_IS_FREE, (projection_id, col, row))
-        #     reservation_db = self.db.cursor.fetchall()
-        #     reservation = self.model.convert(reservation_db[0])
-        #
-        # if reservation.user_id == 0:
-        #     return True
-        #
-        # return False
+        reservations = session.query(Reservation).filter(Reservation.projection_id == projection_id).\
+                        filter(Reservation.row == row).filter(Reservation.col == col).all()
+        for r in reservations:
+            if r.user_id == 0:
+                return True
+            else:
+                return False
 
     def make_reservation(self, *, list_of_reservations):
         session = self.db.session()
+        print(list_of_reservations, '<-----------')
 
         for seats in list_of_reservations:
-            username = seats[2]
-            projection_id = seats[3]
-            col = seats[1]
-            row = seats[0]
-            projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
-            user = self.userGateway.select_user_id(username=username)
-            for r in projection.reservations:
-                if r.row == row and r.col == col:
-                    user.reservations.append(r)
-            session.commit()
+            col, row, username, projection_id = seats[0], seats[1], seats[2], seats[3]
+            userid = self.userGateway.select_user_id(username = username)
 
-            # UPDATE reservations SET user_id = ? WHERE projection_id = ? and col = ? and row = ?;
-            # self.db.cursor.execute(MAKE_RESERVATION, (seats[2], seats[3], seats[1], seats[0]))
+            reservation = session.query(Reservation).filter(Reservation.projection_id == projection_id).\
+                            filter(Reservation.col == col).filter(Reservation.row == row).\
+                            one()
+            reservation.user_id = userid
+
+            session.add(reservation)
+
+        session.commit()

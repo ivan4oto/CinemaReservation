@@ -50,17 +50,14 @@ class ProjectionViews:
     def get_projections_for_movie(self):
         print("\nStep 2 (Movie): Choose a movie> \n")
         movie_id = input('Enter movie id: ')
-        p_data = input('Enter date (optional): ')
+        p_date = input('Enter date (optional): ')
 
-        if movie_id == 'cancel' or p_data == 'cancel':
+        if movie_id == 'cancel' or p_date == 'cancel':
             exit()
 
-        projections = self.controller.get_projections_for_movie(movie_id=movie_id, date=p_data)
-        projections_table = [[p.projections_id, p.movie_type, p.projection_date, p.projection_time] for p in projections]
+        projections = self.controller.get_projections_for_movie(movie_id=movie_id, date=p_date)
+        projections_table = [[p.id, p.movie_type, p.projection_date, p.projection_time] for p in projections]
         projections_headers = ['ID', 'Type', 'Date', 'Time']
         print(tabulate(projections_table, projections_headers, tablefmt = 'psql'))
-
-        # for p in projections:
-        #     print(p)
-
+        
         return movie_id

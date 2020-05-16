@@ -41,13 +41,14 @@ class ReservationViews:
 
         for i in range(int(tickets)):
             seats = self.take_user_input(projection_id)
-            while self.controller.check_is_seats_are_free(*seats) or seats in result:
-                print(f'This seat is already taken!')
+            print(result)
+            if self.controller.check_is_seats_are_free(*seats) or seats in result:
+                raise ValueError('This seat is already taken!')
             result.append(seats)
 
         print("This is your reservation:")
         movie = self.movie_controller.get_movie_by_id(movie_id=movie_id)
-        print(f'Movie: {movie.name}  ({movie.rating})')
+        print(f'Movie: {movie.movie_name}  ({movie.rating})')
         projection = self.projection_controller.get_projection_by_id(projection_id)
         print(f"Date and Time: {projection.projection_date} {projection.projection_time}  ({projection.movie_type})")
         print("Seats:")
@@ -64,6 +65,6 @@ class ReservationViews:
 
     def take_user_input(self, projection_id):
         seat = input("Step 4 (Seats): Choose seat 1> : ")
-        user_id = input("Enter user 1>")
+        username = input("Enter user 1>")
 
-        return [seat[0], seat[2], user_id, projection_id]
+        return [seat[0], seat[2], username, projection_id]
