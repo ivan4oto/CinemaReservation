@@ -21,7 +21,7 @@ class MovieViews:
 
     def get_all_movies(self):
         movies = self.controller.get_all_movies_ordered_by_rating()
-        movies_table = [[m.movie_id, m.name, m.rating] for m in movies]
+        movies_table = [[m.id, m.movie_name, m.rating] for m in movies]
         movies_headers = ['ID', 'Name', 'Rating']
         print(tabulate(movies_table, movies_headers, tablefmt = 'psql'))
         

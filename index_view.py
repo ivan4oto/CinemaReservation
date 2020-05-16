@@ -85,6 +85,11 @@ def admin_panel():
         movie_views.delete_movie()
         admin_panel()
 
+    if command == '4':
+        movie_views.get_all_movies()
+        projection_views.create()
+        admin_panel()
+
     if command == '6':
         projection_views.delete_movie()
         admin_panel()

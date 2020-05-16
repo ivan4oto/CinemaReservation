@@ -17,8 +17,8 @@ class ReservationController:
         self.reservation_gateway.delete_reservation(reservation_id=reservation_id)
         return True
 
-    def check_is_seats_are_free(self, col, row, user_id, projection_id):
-        if not self.reservation_gateway.check_seat_is_free(row=row, col=col, projection_id=projection_id):
+    def check_is_seats_are_free(self, col, row, username, projection_id):
+        if not self.reservation_gateway.check_seat_is_free(row=row, col=col, projection_id=projection_id, username = username):
             return True
         return False
 

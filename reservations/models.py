@@ -18,7 +18,7 @@ class Reservation(Database.base):
     reservations_user = relationship(Users, backref="reservations")
 
     def __str__(self):
-        return f'''Reservation : [{self.res_id}]\n'
+        return f'''Reservation : [{self.id}]\n'
                 Row : {self.row}, Col : {self.col},
                 User_id : {self.user_id}, Projection_id : {self.projection_id}'''
 
@@ -32,5 +32,5 @@ class Reservation(Database.base):
 
     @staticmethod
     def convert(reservation_db):
-        return ReservationModel(row=reservation_db[1], col=reservation_db[2], user_id=reservation_db[3],
+        return Reservation(row=reservation_db[1], col=reservation_db[2], user_id=reservation_db[3],
                                 projection_id=reservation_db[4], res_id=reservation_db[0])

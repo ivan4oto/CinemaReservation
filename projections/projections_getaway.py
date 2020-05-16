@@ -19,9 +19,11 @@ class ProjectionGetaway:
         session = self.db.session()
         Projection.validate(movie_type, projection_date, projection_time)
         movie = self.movie_gateway.get_by_id(movie_id=movie_id)
-        movie.projections.append(
-            Projection(movie_type=movie_type, projection_date=projection_date, projection_time=projection_time))
+        p = Projection(movie_type=movie_type, projection_date=projection_date, projection_time=projection_time, movie_id = movie.id)
+        session.add(p)
         session.commit()
+
+        return p.id
 
     def get_by_id(self, *, projection_id):
 
