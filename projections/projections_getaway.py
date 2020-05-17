@@ -65,7 +65,7 @@ class ProjectionGetaway:
     def update_time(self, projection_id, new_time):
         session = self.db.session()
         projection = session.query(Projection).filter(Projection.id == projection_id).one()
-        projection.projection_date = new_time
+        projection.projection_time = new_time
         session.commit()
 
     def delete_projection(self, projection_id):
