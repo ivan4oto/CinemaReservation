@@ -25,11 +25,11 @@ class ReservationGetaway:
 
     def create_initial(self, projection_id):
         session = self.db.session()
-        #projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
+        # projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
 
         for i in range(self.START_COL, self.END_COL):
             for j in range(self.START_ROW, self.END_ROW):
-                r = Reservation(row = i, col = j, user_id = 0, projection_id = projection_id)
+                r = Reservation(row=i, col=j, user_id=0, projection_id=projection_id)
                 session.add(r)
         session.commit()
 
@@ -64,32 +64,13 @@ class ReservationGetaway:
             if r.user_id == 0:
                 result += 1
         session.commit()
-        
-        return result
 
-        # with self.db.connection:
-        #     self.db.cursor.execute(CHECK_ALL_FREE_SEATS, (projection_id))
-        #
-        #     number_of_free_seats = self.db.cursor.fetchone()
-        #
-        # return number_of_free_seats[0]
+        return result
 
     def get_all_seats_for_projection(self, *, projection_id):
         projection = self.projectionGetaway.get_by_id(projection_id=projection_id)
 
         return self.convert_reservation_to_seats(projection.reservations)
-
-        # with self.db.connection:
-        #     self.db.cursor.execute(GET_ALL_RESERVATION_FOR_PROJECTION, (projection_id))
-        #
-        #     reservations = []
-        #     reservations_db = self.db.cursor.fetchall()
-        #
-        #     for db_reservation in reservations_db:
-        #         reservation = self.model.convert(db_reservation)
-        #         reservations.append(reservation)
-        #
-        # return self.convert_reservation_to_seats(reservations)
 
     def convert_reservation_to_seats(self, reservations):
         row = self.END_ROW - 1
@@ -109,13 +90,13 @@ class ReservationGetaway:
 
     def check_seat_is_free(self, *, row, col, projection_id, username):
         session = self.db.session()
-        #userid = session.query(Users).filter(Users.username == username).one()    
+        # userid = session.query(Users).filter(Users.username == username).one()
         if int(row) > self.END_ROW - 1 or int(col) > self.END_ROW - 1 or int(row) < self.START_ROW or int(
                 col) < self.START_COL:
             raise ValueError("Ain't got that much seets !")
 
-        reservations = session.query(Reservation).filter(Reservation.projection_id == projection_id).\
-                        filter(Reservation.row == row).filter(Reservation.col == col).all()
+        reservations = session.query(Reservation).filter(Reservation.projection_id == projection_id). \
+            filter(Reservation.row == row).filter(Reservation.col == col).all()
         for r in reservations:
             if r.user_id == 0:
                 return True
@@ -128,11 +109,11 @@ class ReservationGetaway:
 
         for seats in list_of_reservations:
             col, row, username, projection_id = seats[0], seats[1], seats[2], seats[3]
-            userid = self.userGateway.select_user_id(username = username)
+            userid = self.userGateway.select_user_id(username=username)
 
-            reservation = session.query(Reservation).filter(Reservation.projection_id == projection_id).\
-                            filter(Reservation.col == col).filter(Reservation.row == row).\
-                            one()
+            reservation = session.query(Reservation).filter(Reservation.projection_id == projection_id). \
+                filter(Reservation.col == col).filter(Reservation.row == row). \
+                one()
             reservation.user_id = userid
 
             session.add(reservation)
